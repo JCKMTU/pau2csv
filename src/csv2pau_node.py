@@ -40,12 +40,37 @@ def talker():
 
     rospy.loginfo("loaded file with %d frames." % len(data))
 
+    angle_range = 45.0
+
     for frame in data:
         msg = pau()
-        msg.m_coeffs = frame[:43]
+
+        msg.m_headRotation.x = (frame[0] * 2) - 1
+        msg.m_headRotation.y = (frame[1] * 2) - 1
+        msg.m_headRotation.z = (frame[2] * 2) - 1
+        msg.m_headRotation.w = (frame[3] * 2) - 1
+   
+        msg.m_headTranslation.x = frame[4]
+        msg.m_headTranslation.y = frame[5]
+        msg.m_headTranslation.z = frame[6]
+   
+        msg.m_neckRotation.x = (frame[7] * 2) - 1
+        msg.m_neckRotation.y = (frame[8] * 2) - 1
+        msg.m_neckRotation.z = (frame[9] * 2) - 1
+        msg.m_neckRotation.w = (frame[10] * 2) - 1
+   
+        msg.m_eyeGazeLeftPitch = (frame[11]*angle_range*2)-angle_range
+        msg.m_eyeGazeLeftYaw = (frame[12]*angle_range*2)-angle_range
+   
+        msg.m_eyeGazeRightPitch = (frame[13]*angle_range*2)-angle_range
+        msg.m_eyeGazeRightYaw = (frame[14]*angle_range*2)-angle_range
+
+        msg.m_coeffs = frame[15:58]
+
         msg.m_shapekeys = ['eye-flare.UP.R', 'lips-narrow.L', 'lips-frown.R', 'eye-blink.UP.R', 'lip-UP.L.UP', 'eye-blink.UP.L', 'lips-frown.L', 'lips-narrow.R', 'eye-flare.UP.L', 'lip-DN.C.UP', 'eye-flare.LO.R', 'lip-DN.R.UP', 'brow_inner_UP.R', 'brow_outer_UP.L', 'brow_inner_UP.L', 'eye-flare.LO.L', 'brow_center_DN', 'lips-smile.R', 'lip-JAW.DN', 'lip-DN.R.DN', 'wince.L', 'lips-smile.L', 'eye-blink.LO.R', 'lip-UP.R.UP', 'lip-UP.C.DN', 'eye-blink.LO.L', 'brow_center_UP', 'lip-DN.L.DN', 'lip-DN.L.UP', 'wince.R', 'sneer.L', 'lips-wide.L', 'brow_outer_DN.R', 'lip-UP.R.DN', 'brow_inner_DN.L', 'brow_outer_up.R', 'brow_inner_DN.R', 'lip-DN.C.DN', 'lip-UP.L.DN', 'brow_outer_DN.L', 'lip-UP.C.UP', 'lips-wide.R', 'sneer.R']
 
         rospy.loginfo("sending frame.")
+
         pub.publish(msg)
 
         rate.sleep()
