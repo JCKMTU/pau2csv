@@ -76,8 +76,6 @@ def main():
         print "%s does not appear to be a rosbag file." % args.file
         exit(1)
 
-    # NOTE The order should be consistent with new_msg below
-    new_header =  header() + ", emotion_type, interaction_type\n"
     write_header = True
 
     with open(output_file_path, 'w') as o:
@@ -85,10 +83,14 @@ def main():
         for topic, msg, time in bag.read_messages(topics=default_topic):
             # Write header
             if write_header:
+                # NOTE The order should be consistent with new_msg below.
+                new_header =  header(",".join(msg.m_shapekeys)) + \
+                    ", emotion_type, interaction_type\n"
                 o.write(new_header)
                 write_header = False
 
             # Write the message values
+            # NOTE: The order should match with new_header above.
             new_msg = msg2str(msg) + ",%d,%d\n" % \
                 (emotion_enum_dict[args.emotion_type],
                 interaction_enum_dict[args.interaction_type])
