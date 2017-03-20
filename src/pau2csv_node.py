@@ -22,7 +22,7 @@
 import rospy
 from pau2motors.msg import pau
 
-def callback(data):
+def msg2str(data):
     num = "{:.20e},"
 
     angle_range = 45
@@ -54,10 +54,12 @@ def callback(data):
     for coeff in data.m_coeffs:
       output += num.format(coeff) #already normalized
 
-
     output = output[:len(output)-1] #cut superflous comma
 
-    print(output)
+    return output
+
+def callback(data):
+    print(msg2str(data))
 
 def header():
     header = "#"
