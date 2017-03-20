@@ -69,7 +69,8 @@ def main():
         if not os.path.exists(args.output_dir):
             print("Making directory %r" % args.output_dir)
             os.mkdir(args.output_dir)
-            output_file_path = os.path.join(args.output_dir, output_file_name)
+
+        output_file_path = os.path.join(args.output_dir, output_file_name)
 
     except rosbag.bag.ROSBagException:
         print "%s does not appear to be a rosbag file." % args.file
