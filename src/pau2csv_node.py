@@ -54,11 +54,12 @@ def callback(data):
     for coeff in data.m_coeffs:
       output += num.format(coeff) #already normalized
 
+
     output = output[:len(output)-1] #cut superflous comma
 
     print(output)
-    
-def listener():
+
+def header():
     header = "#"
     header += "m_headRotation.x,"
     header += "m_headRotation.y,"
@@ -89,7 +90,10 @@ def listener():
     header += "brow_outer_DN.R, lip-UP.R.DN, brow_inner_DN.L, brow_outer_up.R, brow_inner_DN.R,"
     header += "lip-DN.C.DN, lip-UP.L.DN, brow_outer_DN.L, lip-UP.C.UP, lips-wide.R, sneer.R"
 
-    print(header)
+    return header
+
+def listener():
+    print(header())
 
     rospy.init_node('pau2csv', anonymous=True)
     rospy.Subscriber("/blender_api/set_pau", pau, callback)
