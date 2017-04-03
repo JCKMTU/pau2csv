@@ -22,7 +22,7 @@
 import rospy
 from pau2motors.msg import pau
 
-def callback(data):
+def msg2str(data):
     num = "{:.20e},"
 
     angle_range = 45
@@ -56,9 +56,16 @@ def callback(data):
 
     output = output[:len(output)-1] #cut superflous comma
 
-    print(output)
-    
-def listener():
+    return output
+
+def callback(data):
+    print(msg2str(data))
+
+def header(concat_str=None):
+    '''concat_str is an optional argument used to switch the headers of
+    shapekey coefficients. If string is not passed the headers from
+    src/faceshift_puppeteering/sophia/shapekey_pairing.json are used.
+    '''
     header = "#"
     header += "m_headRotation.x,"
     header += "m_headRotation.y,"
@@ -79,17 +86,24 @@ def listener():
 
     header += "m_eyeGazeRightPitch,"
     header += "m_eyeGazeRightYaw,"
-    # TODO: extract these from first shapekeys msg.
-    header += "eye-flare.UP.R, lips-narrow.L, lips-frown.R, eye-blink.UP.R, lip-UP.L.UP,"
-    header += "eye-blink.UP.L, lips-frown.L, lips-narrow.R, eye-flare.UP.L, lip-DN.C.UP,"
-    header += "eye-flare.LO.R, lip-DN.R.UP, brow_inner_UP.R, brow_outer_UP.L, brow_inner_UP.L,"
-    header += "eye-flare.LO.L, brow_center_DN, lips-smile.R, lip-JAW.DN, lip-DN.R.DN, wince.L,"
-    header += "lips-smile.L, eye-blink.LO.R, lip-UP.R.UP, lip-UP.C.DN, eye-blink.LO.L,"
-    header += "brow_center_UP, lip-DN.L.DN, lip-DN.L.UP, wince.R, sneer.L, lips-wide.L,"
-    header += "brow_outer_DN.R, lip-UP.R.DN, brow_inner_DN.L, brow_outer_up.R, brow_inner_DN.R,"
-    header += "lip-DN.C.DN, lip-UP.L.DN, brow_outer_DN.L, lip-UP.C.UP, lips-wide.R, sneer.R"
 
-    print(header)
+    if concat_str:
+        header += concat_str
+    else:
+        # TODO: extract these from first shapekeys msg.
+        header += "eye-flare.UP.R, lips-narrow.L, lips-frown.R, eye-blink.UP.R, lip-UP.L.UP,"
+        header += "eye-blink.UP.L, lips-frown.L, lips-narrow.R, eye-flare.UP.L, lip-DN.C.UP,"
+        header += "eye-flare.LO.R, lip-DN.R.UP, brow_inner_UP.R, brow_outer_UP.L, brow_inner_UP.L,"
+        header += "eye-flare.LO.L, brow_center_DN, lips-smile.R, lip-JAW.DN, lip-DN.R.DN, wince.L,"
+        header += "lips-smile.L, eye-blink.LO.R, lip-UP.R.UP, lip-UP.C.DN, eye-blink.LO.L,"
+        header += "brow_center_UP, lip-DN.L.DN, lip-DN.L.UP, wince.R, sneer.L, lips-wide.L,"
+        header += "brow_outer_DN.R, lip-UP.R.DN, brow_inner_DN.L, brow_outer_up.R, brow_inner_DN.R,"
+        header += "lip-DN.C.DN, lip-UP.L.DN, brow_outer_DN.L, lip-UP.C.UP, lips-wide.R, sneer.R"
+
+    return header
+
+def listener():
+    print(header())
 
     rospy.init_node('pau2csv', anonymous=True)
     rospy.Subscriber("/blender_api/set_pau", pau, callback)
