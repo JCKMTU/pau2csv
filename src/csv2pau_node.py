@@ -31,10 +31,10 @@ import numpy as np
 from pau2motors.msg import pau
 
 def talker():
-    pub = rospy.Publisher('/blender_api/set_pau', pau, queue_size=10)
+    pub = rospy.Publisher('/blender_api/faceshift_values', pau, queue_size=10)
     rospy.init_node('csv2pau', anonymous=True)
 
-    rate = rospy.Rate(29) # 29fps approx. measure this exactly.
+    rate = rospy.Rate(48) # 29fps approx. measure this exactly.
 
     data = np.loadtxt(sys.argv[1], delimiter=',')
 
@@ -65,9 +65,11 @@ def talker():
         msg.m_eyeGazeRightPitch = (frame[13]*angle_range*2)-angle_range
         msg.m_eyeGazeRightYaw = (frame[14]*angle_range*2)-angle_range
 
-        msg.m_coeffs = frame[15:58]
+        msg.m_coeffs = frame[15:-2]
 
-        msg.m_shapekeys = ['eye-flare.UP.R', 'lips-narrow.L', 'lips-frown.R', 'eye-blink.UP.R', 'lip-UP.L.UP', 'eye-blink.UP.L', 'lips-frown.L', 'lips-narrow.R', 'eye-flare.UP.L', 'lip-DN.C.UP', 'eye-flare.LO.R', 'lip-DN.R.UP', 'brow_inner_UP.R', 'brow_outer_UP.L', 'brow_inner_UP.L', 'eye-flare.LO.L', 'brow_center_DN', 'lips-smile.R', 'lip-JAW.DN', 'lip-DN.R.DN', 'wince.L', 'lips-smile.L', 'eye-blink.LO.R', 'lip-UP.R.UP', 'lip-UP.C.DN', 'eye-blink.LO.L', 'brow_center_UP', 'lip-DN.L.DN', 'lip-DN.L.UP', 'wince.R', 'sneer.L', 'lips-wide.L', 'brow_outer_DN.R', 'lip-UP.R.DN', 'brow_inner_DN.L', 'brow_outer_up.R', 'brow_inner_DN.R', 'lip-DN.C.DN', 'lip-UP.L.DN', 'brow_outer_DN.L', 'lip-UP.C.UP', 'lips-wide.R', 'sneer.R']
+        #msg.m_shapekeys = ['eye-flare.UP.R', 'lips-narrow.L', 'lips-frown.R', 'eye-blink.UP.R', 'lip-UP.L.UP', 'eye-blink.UP.L', 'lips-frown.L', 'lips-narrow.R', 'eye-flare.UP.L', 'lip-DN.C.UP', 'eye-flare.LO.R', 'lip-DN.R.UP', 'brow_inner_UP.R', 'brow_outer_UP.L', 'brow_inner_UP.L', 'eye-flare.LO.L', 'brow_center_DN', 'lips-smile.R', 'lip-JAW.DN', 'lip-DN.R.DN', 'wince.L', 'lips-smile.L', 'eye-blink.LO.R', 'lip-UP.R.UP', 'lip-UP.C.DN', 'eye-blink.LO.L', 'brow_center_UP', 'lip-DN.L.DN', 'lip-DN.L.UP', 'wince.R', 'sneer.L', 'lips-wide.L', 'brow_outer_DN.R', 'lip-UP.R.DN', 'brow_inner_DN.L', 'brow_outer_up.R', 'brow_inner_DN.R', 'lip-DN.C.DN', 'lip-UP.L.DN', 'brow_outer_DN.L', 'lip-UP.C.UP', 'lips-wide.R', 'sneer.R']
+        
+        msg.m_shapekeys = ['EyeBlink_L', 'EyeBlink_R', 'EyeSquint_L', 'EyeSquint_R', 'EyeDown_L', 'EyeDown_R', 'EyeIn_L', 'EyeIn_R', 'EyeOpen_L', 'EyeOpen_R', 'EyeOut_L', 'EyeOut_R', 'EyeUp_L', 'EyeUp_R', 'BrowsD_L', 'BrowsD_R', 'BrowsU_C_L', 'BrowsU_C_R', 'BrowsU_L', 'BrowsU_R', 'BrowsSqueeze_L', 'BrowsSqueeze_R', 'JawOpen', 'LipsTogether', 'JawLeft', 'JawRight', 'JawFwd', 'LipsUpperUp_L', 'LipsUpperUp_R', 'LipsLowerDown_L', 'LipsLowerDown_R', 'LipsUpperClose', 'LipsLowerClose', 'LipsLowerOpen', 'LipsUpperOpen', 'MouthSharpCornerPull_L', 'MouthSharpCornerPull_R', 'MouthSmile_L', 'MouthSmile_R', 'MouthDimple_L', 'MouthDimple_R', 'LipsStretch_L', 'LipsStretch_R', 'MouthFrown_L', 'MouthFrown_R', 'MouthPress_L', 'MouthPress_R', 'LipsPucker_L', 'LipsPucker_R', 'LipsFunnel_L', 'LipsFunnel_R', 'MouthLeft', 'MouthRight', 'ChinLowerRaise', 'ChinUpperRaise', 'Sneer_L', 'Sneer_R', 'Puff', 'CheekSquint_L', 'CheekSquint_R' ]
 
         rospy.loginfo("sending frame.")
 
