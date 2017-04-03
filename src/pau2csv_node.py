@@ -36,9 +36,12 @@ def msg2str(data):
     output += num.format((data.m_headRotation.w + 1) / 2)
 
     # this is always 0 anyways, so no scaling for now.
-    output += num.format(data.m_headTranslation.x)
-    output += num.format(data.m_headTranslation.y)
-    output += num.format(data.m_headTranslation.z)
+    #output += num.format(data.m_headTranslation.x)
+    #output += num.format(data.m_headTranslation.y)
+    #output += num.format(data.m_headTranslation.z)
+    output += num.format(0)
+    output += num.format(0)
+    output += num.format(0)
 
     output += num.format((data.m_neckRotation.x + 1) / 2)
     output += num.format((data.m_neckRotation.y + 1) / 2)
