@@ -29,12 +29,13 @@ import sys
 import rospy
 import numpy as np
 from pau2motors.msg import pau
+import math
 
 def talker():
     pub = rospy.Publisher('/blender_api/set_pau', pau, queue_size=10)
     rospy.init_node('csv2pau', anonymous=True)
 
-    rate = rospy.Rate(48) # 29fps approx. measure this exactly.
+    rate = rospy.Rate(120) # 29fps approx. measure this exactly.
 
     data = np.loadtxt(sys.argv[1], delimiter=',', skiprows=1)
 
@@ -66,7 +67,40 @@ def talker():
         msg.m_eyeGazeRightYaw = 0
 
         ## Delete superfluous frames:
-        cut_frame = np.delete(frame, np.s_[13:27], axis=0)
+        cut_frame = np.delete(frame, np.s_[14:28], axis=0)
+	
+	
+	cut_frame[0:10] = np.power(cut_frame[0:10],5.8)
+	cut_frame[12] *= 1.5
+	cut_frame[13:] *= 4.5
+	cut_frame = np.minimum(1.0, cut_frame)
+	#cut_frame *= 6.0
+
+	print(cut_frame[0:10])
+
+	# eyelids
+	cut_frame[17] +=0.1
+	cut_frame[19] +=0.1
+	cut_frame[13] = cut_frame[17]       
+        cut_frame[15] = cut_frame[19]
+	cut_frame[14] = 0.0
+	cut_frame[16] = 0.0
+
+	#jaw
+	#cut_frame[12] *= 0.85
+	#brows
+	#cut_frame[0:9] *= 1.60
+
+
+	#ee
+	#cut_frame[22] = 0.0 
+        #cut_frame[24] = 0.0
+
+	#cut_frame[21] = cut_frame[33]
+	#cut_frame[23] = cut_frame[34]
+	#mouth
+	#cut_frame[25:32] *= 0.8
+        #cut_frame[35:41] *= 1.9
 
         msg.m_coeffs = cut_frame
 
