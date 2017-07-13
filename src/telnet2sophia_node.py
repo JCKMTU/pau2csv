@@ -73,6 +73,9 @@ def talker():
 
         ## Read the frame
         frame_str = tn.read_until("\n").strip("\n")
+
+        print(frame_str)
+
         frame = np.array(frame_str.split(","))
         frame = frame.astype(np.float)
 
