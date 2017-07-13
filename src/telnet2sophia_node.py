@@ -79,6 +79,8 @@ def talker():
         frame = np.array(frame_str.split(","))
         frame = frame.astype(np.float)
 
+        frame *= 0.01
+
         ## Delete superfluous frames:
         cut_frame = np.delete(frame, np.s_[13:27], axis=0)
 
