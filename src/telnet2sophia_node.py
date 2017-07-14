@@ -81,8 +81,8 @@ def talker():
 
         frame *= 0.01
 
-	frame = np.power(frame, 2.0)
-	frame = np.minimum(1.0, frame)
+    	frame = np.power(frame, 2.0)
+    	frame = np.minimum(1.0, frame)
 
         ## Delete superfluous frames:
         cut_frame = np.delete(frame, np.s_[13:27], axis=0)

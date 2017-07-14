@@ -33,23 +33,34 @@ import math
 
 def talker():
     pub = rospy.Publisher('/blender_api/set_pau', pau, queue_size=10)
-    rospy.init_node('csv2pau', anonymous=True)
+    rospy.init_node('mimic2pau', anonymous=True)
 
     rate = rospy.Rate(120) # 29fps approx. measure this exactly.
 
-    data = np.loadtxt(sys.argv[1], delimiter=',', skiprows=1)
+    shpk = np.loadtxt(sys.argv[1], delimiter=',', skiprows=1)
+
+    head = np.loadtxt(sys.argv[2], delimiter=',', skiprows=1)
+    rotations = head[:,2:5]
+
+    assert(len(shpk) == len(head))
 
     rospy.loginfo("loaded file with %d frames." % len(data))
 
     angle_range = 45.0
 
-    for frame in data:
+    for i in range(len(shpk)):
         msg = pau()
 
-        msg.m_headRotation.x = 0
-        msg.m_headRotation.y = 0
-        msg.m_headRotation.z = 0
-        msg.m_headRotation.w = 0
+        rotation = rotations[i]
+        roll = np.deg2rad(rotation[0])
+        pitch = np.deg2rad(-rotation[2])
+        yaw = np.deg2rad(rotation[1])
+        quaternion = tf.transformations.quaternion_from_euler(roll, pitch, yaw)
+        print quaternion
+        msg.m_headRotation.x = quaternion[0]
+        msg.m_headRotation.y = quaternion[1]
+        msg.m_headRotation.z = quaternion[2]
+        msg.m_headRotation.w = quaternion[3]
 
         msg.m_headTranslation.x = 0
         msg.m_headTranslation.y = 0
@@ -66,41 +77,14 @@ def talker():
         msg.m_eyeGazeRightPitch = 0
         msg.m_eyeGazeRightYaw = 0
 
+        frame = shpk[i]
+        frame *= 0.01
+
+    	frame = np.power(frame, 2.0)
+    	frame = np.minimum(1.0, frame)
+
         ## Delete superfluous frames:
-        cut_frame = np.delete(frame, np.s_[14:28], axis=0)
-	
-	
-	cut_frame[0:10] = np.power(cut_frame[0:10],5.8)
-	cut_frame[12] *= 1.5
-	cut_frame[13:] *= 4.5
-	cut_frame = np.minimum(1.0, cut_frame)
-	#cut_frame *= 6.0
-
-	print(cut_frame[0:10])
-
-	# eyelids
-	cut_frame[17] +=0.1
-	cut_frame[19] +=0.1
-	cut_frame[13] = cut_frame[17]       
-        cut_frame[15] = cut_frame[19]
-	cut_frame[14] = 0.0
-	cut_frame[16] = 0.0
-
-	#jaw
-	#cut_frame[12] *= 0.85
-	#brows
-	#cut_frame[0:9] *= 1.60
-
-
-	#ee
-	#cut_frame[22] = 0.0 
-        #cut_frame[24] = 0.0
-
-	#cut_frame[21] = cut_frame[33]
-	#cut_frame[23] = cut_frame[34]
-	#mouth
-	#cut_frame[25:32] *= 0.8
-        #cut_frame[35:41] *= 1.9
+        cut_frame = np.delete(frame, np.s_[13:27], axis=0)
 
         msg.m_coeffs = cut_frame
 
