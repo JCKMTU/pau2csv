@@ -37,9 +37,9 @@ def talker():
 
     rate = rospy.Rate(120) # 29fps approx. measure this exactly.
 
-    shpk = np.loadtxt(sys.argv[1], delimiter=',', skiprows=1)
+    shpk = np.loadtxt(sys.argv[1], delimiter=',', skiprows=0)
 
-    head = np.loadtxt(sys.argv[2], delimiter=',', skiprows=1)
+    head = np.loadtxt(sys.argv[2], delimiter=' ', skiprows=2)
     rotations = head[:,2:5]
 
     assert(len(shpk) == len(head))
