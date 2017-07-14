@@ -30,6 +30,7 @@ import rospy
 import numpy as np
 from pau2motors.msg import pau
 import math
+import tf
 
 def talker():
     pub = rospy.Publisher('/blender_api/set_pau', pau, queue_size=10)
@@ -39,12 +40,11 @@ def talker():
 
     shpk = np.loadtxt(sys.argv[1], delimiter=',', skiprows=0)
 
-    head = np.loadtxt(sys.argv[2], delimiter=' ', skiprows=2)
+    head = np.loadtxt(sys.argv[2], delimiter=' ', skiprows=3)
     rotations = head[:,2:5]
 
-    assert(len(shpk) == len(head))
 
-    rospy.loginfo("loaded file with %d frames." % len(data))
+    rospy.loginfo("loaded file with %d frames." % len(shpk))
 
     angle_range = 45.0
 
