@@ -65,6 +65,8 @@ def talker():
         msg.m_eyeGazeRightPitch = 0
         msg.m_eyeGazeRightYaw = 0
 
+        frame = np.power(frame, 2.0)
+
         msg.m_coeffs = frame[16:]
 
         msg.m_shapekeys = ['brow_center_DN', 'brow_center_UP', 'brow_inner_DN.L', 'brow_inner_UP.L', 'brow_inner_DN.R', 'brow_inner_UP.R', 'brow_outer_DN.L', 'brow_outer_UP.L', 'brow_outer_DN.R', 'brow_outer_up.R', 'wince.L', 'wince.R', 'lip-JAW.DN', 'eye-blink.LO.L', 'eye-flare.LO.L', 'eye-blink.LO.R', 'eye-flare.LO.R', 'eye-blink.UP.L', 'eye-flare.UP.L', 'eye-blink.UP.R', 'eye-flare.UP.R', 'lips-wide.L', 'lips-narrow.L', 'lips-wide.R', 'lips-narrow.R', 'lips-frown.L', 'lips-frown.R', 'lip-DN.C.DN', 'lip-DN.C.UP', 'lip-DN.L.DN', 'lip-DN.L.UP', 'lip-DN.R.DN', 'lip-DN.R.UP', 'lips-smile.L', 'lips-smile.R', 'lip-UP.C.DN', 'lip-UP.C.UP', 'lip-UP.L.DN', 'lip-UP.L.UP', 'lip-UP.R.DN', 'lip-UP.R.UP', 'sneer.L', 'sneer.R']
